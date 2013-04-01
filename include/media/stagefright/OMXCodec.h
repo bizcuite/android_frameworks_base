@@ -60,10 +60,21 @@ struct OMXCodec : public MediaSource,
         // Secure decoding mode
         kUseSecureInputBuffers = 256,
 
+#ifdef OMAP_COMPAT
+// To request codec to return frames in decode order  
+		  kPreferThumbnailMode               = 0x8,
+
+		  kPreferInterlacedOutputContent     = 0x10,
+		MAX_RESOLUTION = 414720, // video resolution for TI Vid Dec
+		MAX_RESOLUTION_WIDTH = 600, // video width for TI Vid Dec
+		MAX_RESOLUTION_HEIGHT = 1024, // video height for TI Vid Dec				
+		kEnableTimeStampInDecodeOrder         = 512,
+#endif
 #ifdef QCOM_HARDWARE
         kEnableThumbnailMode = 512,
         kUseMinBufferCount = 32768,
 #endif
+
     };
     static sp<MediaSource> Create(
             const sp<IOMX> &omx,
@@ -156,6 +167,10 @@ private:
         kAvoidMemcopyInputRecordingFrames     = 2048,
         kRequiresLargerEncoderOutputBuffer    = 4096,
         kOutputBuffersAreUnreadable           = 8192,
+        kDecoderNeedsPortReconfiguration      = 16384,
+        kDecoderCantRenderSmallClips          = 32768,
+        kInterlacedOutputContent              = 65535,
+        kThumbnailMode                        = 131072,
 #ifdef QCOM_HARDWARE
         kStoreMetaDataInInputVideoBuffers     = 16384,
         kRequiresGlobalFlush                  = 0x20000000, // 2^29
@@ -426,3 +441,4 @@ status_t QueryCodecs(
 }  // namespace android
 
 #endif  // OMX_CODEC_H_
+

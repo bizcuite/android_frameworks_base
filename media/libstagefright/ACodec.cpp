@@ -2184,7 +2184,27 @@ void ACodec::UninitializedState::onSetup(
     for (size_t matchIndex = 0; matchIndex < matchingCodecs.size();
             ++matchIndex) {
         componentName = matchingCodecs.itemAt(matchIndex).string();
+#ifdef OMAP_COMPAT
 
+//FIX FOR PICKING THE TI COMPONENT FOR RESOLUTIONS LESS THAN 720p
+
+#define MAX_RESOLUTION   414720 // 864x480(WVGA) - 720x576(D1-PAL)
+		int32_t width = 0 , height = 0 ;
+
+		if (!strncasecmp(mime.c_str(), "video/", 6)) {
+			msg->findInt32("width", &width);
+		        msg->findInt32("height", &height);
+			if( (width * height) <= MAX_RESOLUTION ) {
+				if (strcmp(componentName.c_str() , "OMX.TI.Video.Decoder"))	{
+					continue ;
+				}
+			}
+		} else if (!strcasecmp(mime.c_str(), MEDIA_MIMETYPE_AUDIO_AAC)) {
+			if (strcmp(componentName.c_str() , "OMX.google.aac.decoder")) {
+				continue ;
+			}
+		}
+#endif
         pid_t tid = androidGetTid();
         int prevPriority = androidGetThreadPriority(tid);
         androidSetThreadPriority(tid, ANDROID_PRIORITY_FOREGROUND);
@@ -3039,3 +3059,4 @@ void ACodec::FlushingOutputState::changeStateIfWeOwnAllBuffers() {
 }
 #endif
 }  // namespace android
+
