@@ -234,7 +234,7 @@ static void Surface_init(
         surface = client->createSurface(dpy, w, h, format, flags);
     } else {
         const jchar* str = env->GetStringCritical(jname, 0);
-        const String8 name(str, env->GetStringLength(jname));
+        const String8 name((const char16_t*)str, env->GetStringLength(jname));
         env->ReleaseStringCritical(jname, str);
         surface = client->createSurface(name, dpy, w, h, format, flags);
     }
@@ -315,6 +315,7 @@ static inline SkBitmap::Config convertPixelFormat(PixelFormat format)
     switch (format) {
     case PIXEL_FORMAT_RGBX_8888:    return SkBitmap::kARGB_8888_Config;
     case PIXEL_FORMAT_RGBA_8888:    return SkBitmap::kARGB_8888_Config;
+    case PIXEL_FORMAT_BGRA_8888:    return SkBitmap::kARGB_8888_Config;
     case PIXEL_FORMAT_RGBA_4444:    return SkBitmap::kARGB_4444_Config;
     case PIXEL_FORMAT_RGB_565:      return SkBitmap::kRGB_565_Config;
     case PIXEL_FORMAT_A_8:          return SkBitmap::kA8_Config;
@@ -925,3 +926,4 @@ int register_android_view_Surface(JNIEnv* env)
 }
 
 };
+
