@@ -2601,8 +2601,8 @@ void TouchInputMapper::configureParameters() {
             || mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_SCREEN
             || mParameters.deviceType == Parameters::DEVICE_TYPE_POINTER) {
         mParameters.associatedDisplayIsExternal =
-                mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_SCREEN
-                        && getDevice()->isExternal();
+               /* mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_SCREEN
+                        && getDevice()->isExternal();*/
         mParameters.associatedDisplayId = 0;
     }
 }
