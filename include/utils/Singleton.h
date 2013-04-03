@@ -65,13 +65,14 @@ private:
  */
 
 #define ANDROID_SINGLETON_STATIC_INSTANCE(TYPE)                 \
-    template class Singleton< TYPE >;                           \
-    template<> Mutex Singleton< TYPE >::sLock(Mutex::PRIVATE);  \
-    template<> TYPE* Singleton< TYPE >::sInstance(0);
+    template class ANDROID_API Singleton< TYPE >;                           \
+    template<> ANDROID_API Mutex Singleton< TYPE >::sLock(Mutex::PRIVATE);  \
+    template<> ANDROID_API TYPE* Singleton< TYPE >::sInstance(0);
 
 
 // ---------------------------------------------------------------------------
 }; // namespace android
 
 #endif // ANDROID_UTILS_SINGLETON_H
+
 

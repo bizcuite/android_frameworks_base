@@ -22,8 +22,10 @@
 
 extern "C" {
 
+#if __cplusplus < 201103L && !defined(__GXX_EXPERIMENTAL_CXX0X__)
 typedef uint32_t char32_t;
 typedef uint16_t char16_t;
+#endif
 
 // Standard string functions on char16_t strings.
 int strcmp16(const char16_t *, const char16_t *);
@@ -166,3 +168,4 @@ void utf8_to_utf16(const uint8_t* src, size_t srcLen, char16_t* dst);
 }
 
 #endif
+

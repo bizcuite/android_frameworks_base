@@ -64,11 +64,11 @@
 #endif
 
 // Macros for including the SurfaceTexture name in log messages
-#define ST_LOGV(x, ...) LOGV("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGD(x, ...) LOGD("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGI(x, ...) LOGI("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGW(x, ...) LOGW("[%s] "x, mName.string(), ##__VA_ARGS__)
-#define ST_LOGE(x, ...) LOGE("[%s] "x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGV(x, ...) LOGV("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGD(x, ...) LOGD("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGI(x, ...) LOGI("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGW(x, ...) LOGW("[%s] " x, mName.string(), ##__VA_ARGS__)
+#define ST_LOGE(x, ...) LOGE("[%s] " x, mName.string(), ##__VA_ARGS__)
 
 namespace android {
 
@@ -1354,3 +1354,4 @@ static void mtxMul(float out[16], const float a[16], const float b[16]) {
 }
 
 }; // namespace android
+

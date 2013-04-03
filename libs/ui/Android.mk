@@ -51,7 +51,8 @@ LOCAL_SRC_FILES:= \
 	InputTransport.cpp \
 	PixelFormat.cpp \
 	Rect.cpp \
-	Region.cpp
+	Region.cpp \
+        Overlay.cpp
 
 LOCAL_SHARED_LIBRARIES := \
 	libcutils \
@@ -79,3 +80,4 @@ include $(BUILD_SHARED_LIBRARY)
 ifeq (,$(ONE_SHOT_MAKEFILE))
 include $(call first-makefiles-under,$(LOCAL_PATH))
 endif
+
