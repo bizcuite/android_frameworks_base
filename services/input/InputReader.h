@@ -1102,6 +1102,32 @@ protected:
             SIZE_CALIBRATION_AREA,
         };
 
+//A43 code Touchscreen calibration
+// Touch Position
+        enum TouchPositionCalibration {
+            TOUCH_POSITION_CALIBRATION_DEFAULT,
+            TOUCH_POSITION_CALIBRATION_NONE,
+            TOUCH_POSITION_CALIBRATION_5PT,
+        };
+
+        TouchPositionCalibration touchPositionCalibration;
+
+        // 5 point calibration algorithm coefficients
+        bool havexscale;
+        float xscale;
+        bool havexymix;
+        float xymix;
+        bool havexoffset;
+       float xoffset;
+        bool haveyxmix;
+        float yxmix;
+        bool haveyscale;
+        float yscale;
+        bool haveyoffset;
+        float yoffset;
+
+//END code A43 Touchscreen calibration
+
         SizeCalibration sizeCalibration;
 
         bool haveSizeScale;

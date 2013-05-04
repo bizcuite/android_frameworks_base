@@ -2599,9 +2599,10 @@ void TouchInputMapper::configureParameters() {
     mParameters.associatedDisplayIsExternal = false;
     if (mParameters.orientationAware
             || mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_SCREEN
-            || mParameters.deviceType == Parameters::DEVICE_TYPE_POINTER) {
-        mParameters.associatedDisplayIsExternal =
-               /* mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_SCREEN
+            || mParameters.deviceType == Parameters::DEVICE_TYPE_POINTER
+	    || mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_PAD) {
+        mParameters.associatedDisplayIsExternal = false;
+                /*mParameters.deviceType == Parameters::DEVICE_TYPE_TOUCH_SCREEN
                         && getDevice()->isExternal();*/
         mParameters.associatedDisplayId = 0;
     }
@@ -2811,6 +2812,12 @@ void TouchInputMapper::configureSurface(nsecs_t when, bool* outResetNeeded) {
         } else {
             mSizeScale = 0.0f;
         }
+
+
+
+
+
+
 
         // Pressure factors.
         mPressureScale = 0;
@@ -3098,12 +3105,44 @@ void TouchInputMapper::parseCalibration() {
         }
     }
 
+
+
     out.haveSizeScale = in.tryGetProperty(String8("touch.size.scale"),
             out.sizeScale);
     out.haveSizeBias = in.tryGetProperty(String8("touch.size.bias"),
             out.sizeBias);
     out.haveSizeIsSummed = in.tryGetProperty(String8("touch.size.isSummed"),
             out.sizeIsSummed);
+
+//add code to configure A43 touchscreen
+// Touch Position
+    out.touchPositionCalibration = Calibration::TOUCH_POSITION_CALIBRATION_DEFAULT;
+    String8 touchPositionCalibrationString;
+    if (in.tryGetProperty(String8("touch.touchPosition.calibration"), touchPositionCalibrationString)) {
+        if (touchPositionCalibrationString == "none") {
+            out.touchPositionCalibration = Calibration::TOUCH_POSITION_CALIBRATION_NONE;
+        } else if (touchPositionCalibrationString == "5pt") {
+		LOGI("A_I am 5PT CALIBRATION_A\n");
+            out.touchPositionCalibration = Calibration::TOUCH_POSITION_CALIBRATION_5PT;
+        } else if (touchPositionCalibrationString != "default") {
+            LOGW("Invalid value for touch.touchPosition.calibration: '%s'",
+                    touchPositionCalibrationString.string());
+        }
+    }
+
+    out.havexscale = in.tryGetProperty(String8("touch.touchPosition.xscale"),
+            out.xscale);
+    out.havexymix = in.tryGetProperty(String8("touch.touchPosition.xymix"),
+            out.xymix);
+    out.havexoffset = in.tryGetProperty(String8("touch.touchPosition.xoffset"),
+            out.xoffset);
+    out.haveyxmix = in.tryGetProperty(String8("touch.touchPosition.yxmix"),
+            out.yxmix);
+    out.haveyscale = in.tryGetProperty(String8("touch.touchPosition.yscale"),
+            out.yscale);
+    out.haveyoffset = in.tryGetProperty(String8("touch.touchPosition.yoffset"),
+            out.yoffset);
+//end add code for A43
 
     // Pressure
     out.pressureCalibration = Calibration::PRESSURE_CALIBRATION_DEFAULT;
@@ -3755,6 +3794,7 @@ void TouchInputMapper::cookPointerData() {
     for (uint32_t i = 0; i < currentPointerCount; i++) {
         const RawPointerData::Pointer& in = mCurrentRawPointerData.pointers[i];
 
+
         // Size
         float touchMajor, touchMinor, toolMajor, toolMinor, size;
         switch (mCalibration.sizeCalibration) {
@@ -3918,6 +3958,46 @@ void TouchInputMapper::cookPointerData() {
             y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
             break;
         }
+
+//add code for A43 touchscreen
+		LOGI("B_I am 5PT CALIBRATION_B\n");
+           
+		x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
+            	y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
+
+            switch (mCalibration.touchPositionCalibration) {
+            case Calibration::TOUCH_POSITION_CALIBRATION_5PT:
+                if ( mCalibration.havexscale && mCalibration.havexymix && mCalibration.havexoffset && mCalibration.haveyxmix && mCalibration.haveyscale && mCalibration.haveyoffset) {
+                	    float x_temp = float(in.x - mRawPointerAxes.x.minValue);
+                	    float y_temp = float(in.y - mRawPointerAxes.y.minValue);
+				LOGI("C x_orig = %f, y_orig = %f\n", x, y);
+				LOGI("C x_temp = %f, y_temp = %f\n", x_temp, y_temp);
+				LOGI("C_I am 5PT CALIBRATION_C\n");
+
+                	    x = (mCalibration.xscale * x_temp) + (mCalibration.xymix * y_temp) + mCalibration.xoffset;
+                	    y = (mCalibration.yxmix * x_temp) + (mCalibration.yscale * y_temp) + mCalibration.yoffset;
+				 LOGI("C x_calibrate = %f, y_calibrate = %f\n", x, y);
+                } else {
+			x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
+	            	y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
+			 LOGI("D x_orig = %f, y_orig = %f\n", x, y);
+		LOGI("D_I am 5PT CALIBRATION_D\n");
+                }
+                break;
+            default:
+		x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
+            	y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
+			 LOGI("E x_orig = %f, y_orig = %f\n", x, y);
+		LOGI("E_I am 5PT CALIBRATION_E\n");
+                break;
+            }
+
+
+//end add code for A43
+
+
+LOGI("F x_orig = %f, y_orig = %f\n", x, y);
+
 
         // Write output coords.
         PointerCoords& out = mCurrentCookedPointerData.pointerCoords[i];
