@@ -3962,33 +3962,25 @@ void TouchInputMapper::cookPointerData() {
 //add code for A43 touchscreen
 		LOGI("B_I am 5PT CALIBRATION_B\n");
            
-		x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
-            	y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
+		//We don't want to have landscape mode only...it's the defaut value
+		//x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
+            	//y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
 
             switch (mCalibration.touchPositionCalibration) {
             case Calibration::TOUCH_POSITION_CALIBRATION_5PT:
                 if ( mCalibration.havexscale && mCalibration.havexymix && mCalibration.havexoffset && mCalibration.haveyxmix && mCalibration.haveyscale && mCalibration.haveyoffset) {
                 	    float x_temp = float(in.x - mRawPointerAxes.x.minValue);
                 	    float y_temp = float(in.y - mRawPointerAxes.y.minValue);
-				LOGI("C x_orig = %f, y_orig = %f\n", x, y);
-				LOGI("C x_temp = %f, y_temp = %f\n", x_temp, y_temp);
-				LOGI("C_I am 5PT CALIBRATION_C\n");
+				//LOGI("C x_orig = %f, y_orig = %f\n", x, y);
+				//LOGI("C x_temp = %f, y_temp = %f\n", x_temp, y_temp);
+				//LOGI("C_I am 5PT CALIBRATION_C\n");
 
                 	    x = (mCalibration.xscale * x_temp) + (mCalibration.xymix * y_temp) + mCalibration.xoffset;
                 	    y = (mCalibration.yxmix * x_temp) + (mCalibration.yscale * y_temp) + mCalibration.yoffset;
-				 LOGI("C x_calibrate = %f, y_calibrate = %f\n", x, y);
-                } else {
-			x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
-	            	y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
-			 LOGI("D x_orig = %f, y_orig = %f\n", x, y);
-		LOGI("D_I am 5PT CALIBRATION_D\n");
+				 //LOGI("C x_calibrate = %f, y_calibrate = %f\n", x, y);
                 }
                 break;
             default:
-		x = float(in.x - mRawPointerAxes.x.minValue) * mXScale;
-            	y = float(in.y - mRawPointerAxes.y.minValue) * mYScale;
-			 LOGI("E x_orig = %f, y_orig = %f\n", x, y);
-		LOGI("E_I am 5PT CALIBRATION_E\n");
                 break;
             }
 
@@ -3996,7 +3988,7 @@ void TouchInputMapper::cookPointerData() {
 //end add code for A43
 
 
-LOGI("F x_orig = %f, y_orig = %f\n", x, y);
+//LOGI("F x_orig = %f, y_orig = %f\n", x, y);
 
 
         // Write output coords.
